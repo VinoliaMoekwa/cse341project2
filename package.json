@@ -1,0 +1,34 @@
+{
+  "name": "cse341project2",
+  "version": "1.0.0",
+  "description": "Project 2 for CSE 341",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm start",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VinoliaMoekwa/cse341project2.git"
+  },
+  "keywords": [
+    "run",
+    "start"
+  ],
+  "author": "Vinolia Moekwa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VinoliaMoekwa/cse341project2/issues"
+  },
+  "homepage": "https://github.com/VinoliaMoekwa/cse341project2#readme",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "db": "^6.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongo": "^0.1.0",
+    "mongodb": "^6.13.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
