@@ -13,7 +13,7 @@ const initDb = (callback) => {
     MongoClient.connect(process.env.MONGODB_URL)
         .then(client => {
             console.log('Connected to MongoDB');
-            database = client.db(process.env.vinolia341);
+            database = client.db(process.env.project2);
             callback(null, database);
         })
         .catch(err => {
