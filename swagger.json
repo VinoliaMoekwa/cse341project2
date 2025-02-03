@@ -5,7 +5,7 @@
     "description": "API for managing orders and products",
     "version": "1.0.0"
   },
-  "host": "cse341project2-2.onrender.com",
+  "host": "https://cse341project2-8qb2.onrender.com/api-docs",
   "basePath": "/",
   "schemes": ["https"],
   "paths": {
