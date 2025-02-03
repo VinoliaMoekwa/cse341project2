@@ -7,7 +7,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origional','' );
+    res.setHeader('Access-Control-Allow-Origin','' );
     res.setHeader(
         'Acess-Control-Allow-Headers',
         'Origional, X-Requested-With, Content-Type, Accept, Z-key'
