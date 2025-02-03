@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
 
-const getAll = async (req, res) => {
+const getAllProducts = async (req, res) => {
     //swagger.tags=['Products']
     console.log('productsController.getAll called');
     const db = mongodb.getDatabase();
@@ -11,7 +11,7 @@ const getAll = async (req, res) => {
     res.status(200).json(products);
 };
 
-const getSingle = async (req, res) => {
+const getSingleProduct = async (req, res) => {
     //swagger.tags=['Products']
     console.log(`productsController.getSingle called with id: ${req.params.id}`);
     const productId = new ObjectId(req.params.id);
@@ -26,32 +26,34 @@ const getSingle = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-    //swagger.tags=['Product']
+    // Construct the order from the request body
     const product = {
         name: req.body.name,
-        category: req.body.category,
+        category: req.body.catergory,
         price: req.body.price,
         stock: req.body.stock,
-    
     };
 
     try {
         const db = mongodb.getDatabase();
-        const response = await db.collection('products').insertOne(products);
+        const response = await db.collection('products').insertOne(product);
 
-        if (response.insertedCount > 0) {
-            res.status(201).json(response.ops[0]);
+        // Check if the insertion was acknowledged by MongoDB
+        if (response.acknowledged) {
+            // Return the inserted document's data (including its new _id)
+            res.status(201).json({ _id: response.insertedId, ...product });
         } else {
-            res.status(500).json({ message: "Some error occurred while creating the product." });
+            res.status(500).json({ message: "Some error occurred while creating the order." });
         }
     } catch (err) {
         res.status(500).json({ message: "An error occurred", error: err.message });
     }
 };
 
+
 const updateProduct = async (req, res) => {
     //swagger.tags=['Products']
-    const orderId = new ObjectId(req.params.id);
+    const productId = new ObjectId(req.params.id);
     const updateProduct = {
         name: req.body.name,
         category: req.body.category,
@@ -94,8 +96,8 @@ const deleteProduct= async (req, res) => {
 };
 
 module.exports = {
-    getAll,
-    getSingle,
+    getAllProducts,
+    getSingleProduct,
     createProduct,
     updateProduct,
     deleteProduct

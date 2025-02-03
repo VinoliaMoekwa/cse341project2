@@ -1,7 +1,8 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
+const { Database } = require('mongo');
 
-const getAll = async (req, res) => {
+const getAllOrders = async (req, res) => {
     //swagger.tags=['Orders']
     console.log('ordersController.getAll called');
     const db = mongodb.getDatabase();
@@ -11,28 +12,38 @@ const getAll = async (req, res) => {
     res.status(200).json(orders);
 };
 
-const getSingle = async (req, res) => {
-    //swagger.tags=['Orders']
-    console.log(`ordersController.getSingle called with id: ${req.params.id}`);
+const getSingleOrder = async (req, res) => {
+    console.log(`ordersController.getSingleOrder called with id: ${req.params.id}`);
+
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid order id format' });
+    }
+    
     const orderId = new ObjectId(req.params.id);
     const db = mongodb.getDatabase();
-    const result = await db.collection('orders').findOne({ _id: orderId });
-    if (result) {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(result);
-    } else {
-        res.status(404).json({ message: 'Order not found' });
+    
+    try {
+        const result = await db.collection('orders').findOne({ _id: orderId });
+        if (result) {
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(result);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching order:', err);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
 const createOrder = async (req, res) => {
-    //swagger.tags=['Orders']
+    // Construct the order from the request body
     const order = {
-        customer_name: req.body.customerName,
+        customerName: req.body.customerName,
         quantity: req.body.quantity,
-        total_price: req.body.totalPrice,
-        order_date: req.body.orderDate,
-        shipping_address: req.body.shippingAddress,
+        totalPrice: req.body.totalPrice,
+        orderDate: req.body.orderDate,
+        shippingAddress: req.body.shippingAddress,
         province: req.body.province
     };
 
@@ -40,25 +51,28 @@ const createOrder = async (req, res) => {
         const db = mongodb.getDatabase();
         const response = await db.collection('orders').insertOne(order);
 
-        if (response.insertedCount > 0) {
-            res.status(201).json(response.ops[0]);
+        // Check if the insertion was acknowledged by MongoDB
+        if (response.acknowledged) {
+            // Return the inserted document's data (including its new _id)
+            res.status(201).json({ _id: response.insertedId, ...order });
         } else {
-            res.status(500).json({ message: "Some error occurred while creating the contact." });
+            res.status(500).json({ message: "Some error occurred while creating the order." });
         }
     } catch (err) {
         res.status(500).json({ message: "An error occurred", error: err.message });
     }
 };
 
+
 const updateOrder = async (req, res) => {
     //swagger.tags=['Orders']
     const orderId = new ObjectId(req.params.id);
     const updateOrder = {
-        customer_name: req.body.customerName,
+        customerName: req.body.customerName,
         quantity: req.body.quantity,
-        total_price: req.body.totalPrice,
-        order_date: req.body.orderDate,
-        shipping_address: req.body.shippingAddress,
+        totalPrice: req.body.totalPrice,
+        orderDate: req.body.orderDate,
+        shippingAddress: req.body.shippingAddress,
         province: req.body.province
     };
     console.log('Request body:', req.body); 
@@ -96,8 +110,8 @@ const deleteOrder= async (req, res) => {
 };
 
 module.exports = {
-    getAll,
-    getSingle,
+    getAllOrders,
+    getSingleOrder,
     createOrder,
     updateOrder,
     deleteOrder
