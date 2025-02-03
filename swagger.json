@@ -25,13 +25,13 @@
             "name": "body",
             "in": "body",
             "schema": {
-              "type": "object",
+              "type": "objectId",
               "properties": {
-                "customer_name": { "type": "string", "example": "any" },
-                "quantity": { "type": "integer", "example": "any" },
-                "total_price": { "type": "number", "example": "any" },
-                "order_date": { "type": "string", "example": "any" },
-                "shipping_address": { "type": "string", "example": "any" },
+                "customerName": { "type": "string", "example": "any" },
+                "quantity": { "type": "string", "example": "any" },
+                "totalPrice": { "type": "string", "example": "any" },
+                "orderDate": { "type": "string", "example": "any" },
+                "shippingAddress": { "type": "string", "example": "any" },
                 "province": { "type": "string", "example": "any" }
               }
             }
@@ -59,12 +59,12 @@
             "name": "body",
             "in": "body",
             "schema": {
-              "type": "object",
+              "type": "objectId",
               "properties": {
                 "name": { "type": "string", "example": "any" },
                 "category": { "type": "string", "example": "any" },
-                "price": { "type": "number", "example": "any" },
-                "stock": { "type": "integer", "example": "any" }
+                "price": { "type": "string", "example": "any" },
+                "stock": { "type": "string", "example": "any" }
               }
             }
           }
