@@ -45,8 +45,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "objectId"
+            "type": "string"
           }
         ],
         "responses": {
@@ -62,8 +61,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "objectId"
+            "type": "string"
           },
           {
             "name": "body",
@@ -86,12 +84,11 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "objectId"
+            "type": "string"
           }
         ],
         "responses": {
-          "200": { "description": "Order deleted" }
+          "204": { "description": "Order deleted" }
         }
       }
     },
@@ -121,32 +118,84 @@
           "500": { "description": "Internal Server Error" }
         }
       }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "description": "Retrieve a single product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Product not found" }
+        }
+      },
+      "put": {
+        "tags": ["Products"],
+        "description": "Update a product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Product updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "description": "Delete a product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": { "description": "Product deleted" }
+        }
+      }
     }
   },
   "definitions": {
     "Order": {
       "type": "object",
       "properties": {
-        "_id": { "type": "string", "format": "objectId" },
         "customerName": { "type": "string" },
-        "quantity": { "type": "any" },
-        "totalPrice": { "type": "any" },
-        "orderDate": { "type": "any" },
-        "shippingAddress": { "type": "any" },
-        "province": { "type": "any" }
+        "quantity": { "type": "string" },
+        "totalPrice": { "type": "string" },
+        "orderDate": { "type": "string", "format": "date-time" },
+        "shippingAddress": { "type": "string" },
+        "province": { "type": "string" }
       }
     },
     "Product": {
       "type": "object",
       "properties": {
-        "_id": { "type": "string", "format": "objectId" },
         "name": { "type": "string" },
-        "category": { "type": "any" },
-        "price": { "type": "any" },
-        "stock": { "type": "any" }
+        "category": { "type": "string" },
+        "price": { "type": "string" },
+        "stock": { "type": "string" }
       }
     }
   }
 }
-
-    
