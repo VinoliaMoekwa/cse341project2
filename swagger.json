@@ -181,8 +181,8 @@
       "type": "object",
       "properties": {
         "customerName": { "type": "string" },
-        "quantity": { "type": "string" },
-        "totalPrice": { "type": "string" },
+        "quantity": { "type": "integer" },
+        "totalPrice": { "type": "number" },
         "orderDate": { "type": "string", "format": "date-time" },
         "shippingAddress": { "type": "string" },
         "province": { "type": "string" }
@@ -193,8 +193,8 @@
       "properties": {
         "name": { "type": "string" },
         "category": { "type":"string" },
-        "price": { "type": "string" },
-        "stock": { "type": "string" }
+        "price": { "type": "number" },
+        "stock": { "type": "integer" }
       }
     }
   }

@@ -21,10 +21,10 @@ Content-Type: application/json
 
 {
   "customerName": "John Doe",
-  "quantity": "3",
-  "totalPrice": "$200",
+  "quantity": 3,
+  "totalPrice": 200,
   "orderStatus": "Delivered",
-  "orderDate": "2025-02-10",
+  "orderDate": 2025-02-10,
   "shippingAddress": "2799 Bloemside",
   "province": "Northen Cape"
 

@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const ordersController = require('../controllers/orders');
+const { getAllOrders, getSingleOrder, createOrder, updateOrder, deleteOrder } = require('../controllers/orders');
+const { validateOrder, validateId } = require('../middleware/validation');
+const errorHandler = require('../middleware/errorHandler');
 
-router.get('/', ordersController.getAllOrders);
-router.get('/:id', ordersController.getSingleOrder);
-router.post('/', ordersController.createOrder);
-router.put('/:id', ordersController.updateOrder);
-router.delete('/:id', ordersController.deleteOrder);
+
+router.get('/', getAllOrders);
+router.get('/:id', validateId, getSingleOrder);
+router.post('/', validateOrder, createOrder);
+router.put('/:id', [validateId, validateOrder], updateOrder);
+router.delete('/:id', validateId, deleteOrder);
+
+
+router.use(errorHandler);
 
 module.exports = router;
