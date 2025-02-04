@@ -192,7 +192,7 @@
       "type": "object",
       "properties": {
         "name": { "type": "string" },
-        "category": { "type": "string" },
+        "category": { "type":"string" },
         "price": { "type": "string" },
         "stock": { "type": "string" }
       }
