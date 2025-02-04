@@ -1,17 +1,22 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
-const { Database } = require('mongo');
 
+// Get all orders
 const getAllOrders = async (req, res) => {
-    //swagger.tags=['Orders']
     console.log('ordersController.getAll called');
     const db = mongodb.getDatabase();
-    const result = await db.collection('orders').find();
-    const orders = await result.toArray();
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(orders);
+    try {
+        const result = await db.collection('orders').find();
+        const orders = await result.toArray();
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(orders);
+    } catch (err) {
+        console.error('Error fetching orders:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
+// Get single order
 const getSingleOrder = async (req, res) => {
     console.log(`ordersController.getSingleOrder called with id: ${req.params.id}`);
 
@@ -36,8 +41,13 @@ const getSingleOrder = async (req, res) => {
     }
 };
 
+// Create order with basic validation
 const createOrder = async (req, res) => {
-    // Construct the order from the request body
+    // Validate input
+    if (!req.body.customerName || !req.body.quantity || !req.body.totalPrice || !req.body.orderDate) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
     const order = {
         customerName: req.body.customerName,
         quantity: req.body.quantity,
@@ -51,9 +61,7 @@ const createOrder = async (req, res) => {
         const db = mongodb.getDatabase();
         const response = await db.collection('orders').insertOne(order);
 
-        // Check if the insertion was acknowledged by MongoDB
         if (response.acknowledged) {
-            // Return the inserted document's data (including its new _id)
             res.status(201).json({ _id: response.insertedId, ...order });
         } else {
             res.status(500).json({ message: "Some error occurred while creating the order." });
@@ -63,9 +71,17 @@ const createOrder = async (req, res) => {
     }
 };
 
-
+// Update order with validation and error handling
 const updateOrder = async (req, res) => {
-    //swagger.tags=['Orders']
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid order id format' });
+    }
+
+    // Validate the incoming data
+    if (!req.body.customerName || !req.body.quantity || !req.body.totalPrice || !req.body.orderDate) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
     const orderId = new ObjectId(req.params.id);
     const updateOrder = {
         customerName: req.body.customerName,
@@ -75,7 +91,6 @@ const updateOrder = async (req, res) => {
         shippingAddress: req.body.shippingAddress,
         province: req.body.province
     };
-    console.log('Request body:', req.body); 
 
     try {
         const db = mongodb.getDatabase();
@@ -84,15 +99,19 @@ const updateOrder = async (req, res) => {
         if (response.modifiedCount > 0) {
             res.status(204).send();
         } else {
-            res.status(404).json({ message: "Order could not updated" });
+            res.status(404).json({ message: "Order could not be updated or does not exist" });
         }
     } catch (err) {
         res.status(500).json({ message: "An error occurred", error: err.message });
     }
 };
 
-const deleteOrder= async (req, res) => {
-    //swagger.tags=['Orders']
+// Delete order with error handling
+const deleteOrder = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid order id format' });
+    }
+
     const orderId = new ObjectId(req.params.id);
 
     try {
