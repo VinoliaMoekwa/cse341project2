@@ -36,7 +36,7 @@ Content-Type: application/json
 
 {
   "name" : "iphone",
-  "catergory": "Electronics",
+  "category": "Electronics",
   "price": "$50",
   "stock": "5"
 }
