@@ -28,6 +28,10 @@ const getSingleProduct = async (req, res, next) => {
 };
 
 const createProduct = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const product = {
         name: req.body.name,
         category: req.body.category,
@@ -50,6 +54,10 @@ const createProduct = async (req, res, next) => {
 };
 
 const updateProduct = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const productId = new ObjectId(req.params.id);
     const updatedProduct = {
         name: req.body.name,
@@ -73,6 +81,10 @@ const updateProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const productId = new ObjectId(req.params.id);
         const db = mongodb.getDatabase();

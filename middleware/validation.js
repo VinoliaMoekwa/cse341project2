@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { body, param } = require('express-validator');
 
 
@@ -9,7 +10,7 @@ const validateOrder = [
 ];
 
 const validateProduct = [
-    body('name').notEmpty().withMessage('Product name is required'),
+   body('name').notEmpty().withMessage('Product name is required'),
     body('category').notEmpty().withMessage('Category is required'),
     body('price').isFloat({ gt: 0 }).withMessage('Price must be a positive number'),
     body('stock').isInt({ min: 0 }).withMessage('Stock must be a non-negative integer'),

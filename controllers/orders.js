@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongodb');
 const mongodb = require('../data/database');
+const { validationResult } = require('express-validator');
+
 
 const getAllOrders = async (req, res, next) => {
     try {
@@ -28,6 +30,11 @@ const getSingleOrder = async (req, res, next) => {
 };
 
 const createOrder = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const order = {
         customerName: req.body.customerName,
         quantity: req.body.quantity,
@@ -52,6 +59,10 @@ const createOrder = async (req, res, next) => {
 };
 
 const updateOrder = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const orderId = new ObjectId(req.params.id);
     const updateOrder = {
         customerName: req.body.customerName,
@@ -77,6 +88,10 @@ const updateOrder = async (req, res, next) => {
 };
 
 const deleteOrder = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const orderId = new ObjectId(req.params.id);
         const db = mongodb.getDatabase();
