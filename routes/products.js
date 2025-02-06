@@ -8,7 +8,7 @@ const errorHandler = require('../middleware/errorHandler');
 
 router.get('/', getAllProducts);
 router.get('/:id', getSingleProduct);
-router.post('/',validateProduct,isAuthenticated,  createProduct); //Put back isAuthenticated
+router.post('/',validateProduct,  createProduct); //Put back isAuthenticated
 router.put('/:id',validateId,validateProduct, updateProduct);//Put back isAuthenticated
 router.delete('/:id',validateId,validateProduct, deleteProduct);//Put back isAuthenticated
 
