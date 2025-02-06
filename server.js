@@ -1,4 +1,5 @@
-dotenv.config();
+dotenv.config()
+console.log('GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
