@@ -25,11 +25,11 @@ app.use(cors());
 // Session configuration using MongoDB as store
 app.use(
     session({
-        secret: process.env.SESSION_SECRET || "secret",
+        secret: process.env.GITHUB_CLIENT_SECRET || "secret",
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI, // MongoDB connection string from .env
+            mongoUrl: process.env.MONGODB_URL, // MongoDB connection string from .env
             ttl: 14 * 24 * 60 * 60, // Session expiration time in seconds (14 days)
         }),
     })
