@@ -1,5 +1,4 @@
-dotenv.config()
-console.log('GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
+dotenv.config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
@@ -15,6 +14,7 @@ const { isAuthenticated } = require('./middleware/authenticate'); // Correct imp
 const errorHandler = require('./middleware/errorHandler');
 const routes = require('./routes/index');
 
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
