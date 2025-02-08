@@ -11,7 +11,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const GitHubStrategy = require('passport-github2').Strategy;
 const errorHandler = require('./middleware/errorHandler');
-const { isAuthenticated} = require('../middleware/authenticate');
+const { isAuthenticated} = require('./middleware/authenticate');
 const routes = require('./routes/index');
 
 

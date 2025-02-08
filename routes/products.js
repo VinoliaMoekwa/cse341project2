@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct } = require('../controllers/products');
 const { validateProduct, validateId } = require('../middleware/validation');
+const { isAuthenticated} = require('../middleware/authenticate');
+
 
 router.get('/', getAllProducts);
 router.get('/:id', getSingleProduct);

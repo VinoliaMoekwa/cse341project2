@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getAllOrders, getSingleOrder, createOrder, updateOrder, deleteOrder } = require('../controllers/orders');
 const { validateOrder, validateId } = require('../middleware/validation');
+const { isAuthenticated} = require('../middleware/authenticate');
 
 
 router.get('/', getAllOrders);
