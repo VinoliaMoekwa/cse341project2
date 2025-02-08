@@ -1,5 +1,6 @@
 
 const isAuthenticated = (req, res, next) => {
+    console.log("In isAuthenticated middleware. req.user:", req.user);
     if (req.isAuthenticated && req.isAuthenticated()) {
       return next();
     }
@@ -8,3 +9,4 @@ const isAuthenticated = (req, res, next) => {
   
   module.exports = { isAuthenticated };
   
+ 
