@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 // Configure CORS to allow credentials (cookies) to be sent.
 // Replace 'http://localhost:3000' with your actual Swagger UI origin if needed.
 app.use(cors({
-  origin: 'https://cse341project2-8qb2.onrender.com/github/callback', // adjust if your client is hosted elsewhere
+  origin: 'https://cse341project2-8qb2.onrender.com', // adjust if your client is hosted elsewhere
   credentials: true,
 }));
 
