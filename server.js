@@ -1,4 +1,4 @@
-// server.js
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -19,75 +19,72 @@ const routes = require('./routes/index');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Middleware Setup --- //
+// --- MIDDLEWARE SETUP --- //
 
-// Parse JSON bodies
+// Parse JSON request bodies
 app.use(bodyParser.json());
 
-// Configure CORS so that credentials (cookies) are allowed.
-// Adjust the "origin" option if you know your client’s URL.
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+// Configure CORS to allow credentials (cookies) to be sent.
+// Replace 'http://localhost:3000' with your actual Swagger UI origin if needed.
+app.use(cors({
+  origin: 'http://localhost:3000', // adjust if your client is hosted elsewhere
+  credentials: true,
+}));
 
-// Session configuration using MongoDB as store
-app.use(
-  session({
-    secret: process.env.GITHUB_CLIENT_SECRET || 'secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }, // In dev, secure: false
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URL, // Ensure this is defined in your .env file
-      ttl: 14 * 24 * 60 * 60, // 14 days in seconds
-    }),
-  })
-);
+// Session configuration using MongoDB as the store
+app.use(session({
+  secret: process.env.GITHUB_CLIENT_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production' // secure cookies only in production (HTTPS)
+  },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URL, // Ensure this is defined in your .env file
+    ttl: 14 * 24 * 60 * 60, // 14 days in seconds
+  }),
+}));
 
-// Initialize Passport and let it use session support.
+// Initialize Passport and use session support.
 app.use(passport.initialize());
 app.use(passport.session());
 
-// --- Passport Configuration --- //
+// --- PASSPORT CONFIGURATION --- //
 
-// GitHub Strategy configuration
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: process.env.CALLBACK_URL,
-    },
-    (accessToken, refreshToken, profile, done) => {
-      console.log("GitHub Strategy called. Profile:", profile);
-      // You could perform DB operations here.
-      return done(null, profile);
-    }
-  )
-);
+// Configure the GitHub strategy.
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
+  },
+  (accessToken, refreshToken, profile, done) => {
+    console.log("GitHub Strategy Callback - Profile:", profile);
+    // In a real app, you might save the user to your DB here.
+    return done(null, profile);
+  }
+));
 
-// Serialize & Deserialize: storing the entire user object (for simplicity)
+// Serialize the entire user object into the session.
 passport.serializeUser((user, done) => {
   done(null, user);
 });
+
+// Deserialize the user object from the session.
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-// --- Routes & API Documentation --- //
+// --- ROUTES & API DOCUMENTATION --- //
 
-// Swagger docs
+// Serve Swagger API docs at /api-docs.
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// A simple home route that shows login status.
-app.get('/', (req, res) => {
-  res.send(req.isAuthenticated() ? `Logged in as ${req.user.displayName}` : "Logged Out");
-});
+// Simple home route to show login status.
+app.get('/', (req, res) =>
+  res.send(req.isAuthenticated() ? `Logged in as ${req.user.displayName}` : "Logged Out")
+);
 
-// GitHub callback route: after authentication, Passport will populate req.user.
+// GitHub callback route: after authentication, Passport populates req.user.
 app.get(
   '/github/callback',
   passport.authenticate('github', { failureRedirect: '/api-docs', session: true }),
@@ -97,26 +94,26 @@ app.get(
   }
 );
 
-// --- Debug Middleware --- //
-// Log session and user data for every request to help with debugging.
+// --- DEBUG MIDDLEWARE --- //
+// This middleware logs the session and user for every request (remove in production)
 app.use((req, res, next) => {
-  console.log("Request Session:", req.session);
-  console.log("Request User:", req.user);
+  console.log("Request session:", req.session);
+  console.log("Request user:", req.user);
   next();
 });
 
-// Protected route: only accessible if authenticated.
+// Protected route example.
 app.get('/protected', isAuthenticated, (req, res) => {
   res.json({ message: "You have access to this protected route", user: req.user });
 });
 
-// Mount additional routes from routes/index.js
+// Mount additional routes.
 app.use('/', routes);
 
 // Error handling middleware (should be last).
 app.use(errorHandler);
 
-// --- Database Connection & Server Start --- //
+// --- DATABASE CONNECTION & SERVER START --- //
 mongodb.initDb((err) => {
   if (err) {
     console.error('❌ Failed to connect to the database:', err);
