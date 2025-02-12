@@ -68,7 +68,7 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
+    callbackURL: process.env.CALLBACK_URL.trim()
   },
   (_accessToken, _refreshToken, profile, done) => {
     console.log("GitHub Strategy Callback - Profile:", profile);
