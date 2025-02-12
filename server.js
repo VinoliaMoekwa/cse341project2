@@ -33,7 +33,7 @@ console.log('GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
 console.log('CALLBACK_URL:', process.env.CALLBACK_URL);
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, })
+mongoose.connect(process.env.MONGODB_URL)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
