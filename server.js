@@ -49,14 +49,18 @@ app.use(session({
   secret: process.env.GITHUB_CLIENT_SECRET || 'secret',
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Important for deployments behind a proxy (like Render)
   cookie: { 
-    secure: process.env.NODE_ENV === 'production' // secure cookies only in production (HTTPS)
+    secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
+    httpOnly: true, // Prevents client-side JavaScript access to cookies
+    sameSite: 'lax' // Adjust if needed for cross-origin issues
   },
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URL, // Ensure this is defined in your .env file
     ttl: 14 * 24 * 60 * 60, // 14 days in seconds
   }),
 }));
+
 
 // Initialize Passport and use session support.
 app.use(passport.initialize());
