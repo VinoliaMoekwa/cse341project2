@@ -31,6 +31,11 @@ console.log('GITHUB_CLIENT_SECRET:', process.env.GITHUB_CLIENT_SECRET);
 console.log('GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
 console.log('CALLBACK_URL:', process.env.CALLBACK_URL);
 
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Failed to connect to MongoDB', err));
+
 // Configure CORS to allow credentials (cookies) to be sent.
 // Replace 'http://localhost:3000' with your actual Swagger UI origin if needed.
 app.use(cors({
@@ -64,12 +69,12 @@ passport.use(new GitHubStrategy({
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: process.env.CALLBACK_URL,
   },
-  (accessToken, refreshToken, profile, done) => {
+  (_accessToken, _refreshToken, profile, done) => {
     console.log("GitHub Strategy Callback - Profile:", profile);
     // In a real app, you might save the user to your DB here.
     return done(null, profile);
   }
-));
+)); 
 
 // Serialize the entire user object into the session.
 passport.serializeUser((user, done) => {
@@ -84,6 +89,8 @@ passport.deserializeUser((user, done) => {
 // --- ROUTES & API DOCUMENTATION --- //
 
 // Serve Swagger API docs at /api-docs.
+// Use the routes
+app.use('/', routes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Simple home route to show login status.
