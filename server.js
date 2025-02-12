@@ -24,6 +24,13 @@ const PORT = process.env.PORT || 3000;
 // Parse JSON request bodies
 app.use(bodyParser.json());
 
+// Log environment variables to verify they are loaded correctly
+console.log('MONGODB_URL:', process.env.MONGODB_URL);
+console.log('DB_NAME:', process.env.DB_NAME);
+console.log('GITHUB_CLIENT_SECRET:', process.env.GITHUB_CLIENT_SECRET);
+console.log('GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
+console.log('CALLBACK_URL:', process.env.CALLBACK_URL);
+
 // Configure CORS to allow credentials (cookies) to be sent.
 // Replace 'http://localhost:3000' with your actual Swagger UI origin if needed.
 app.use(cors({
