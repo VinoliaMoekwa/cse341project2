@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-// A simple hello world route.
-router.get('/', (req, res) => {
-  res.send('Hello world');
-});
+
+
 
 // Mount additional routers if available.
 router.use('/orders', require('./orders'));
