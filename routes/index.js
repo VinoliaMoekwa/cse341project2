@@ -17,6 +17,16 @@ router.get('/login', passport.authenticate('github'), (req, res) => {
   // This handler won't be reached because Passport redirects to GitHub.
 });
 
+// GitHub callback route
+router.get('/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  }
+);
+
+
 // Logout route: logs the user out and clears the session.
 router.get('/logout', (req, res, next) => {
   req.logout(function(err) {
